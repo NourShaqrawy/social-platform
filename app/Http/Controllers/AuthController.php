@@ -4,80 +4,87 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+
 
 class AuthController extends Controller
 {
-
-   // app/Http/Controllers/AuthController.php
-public function register(Request $request) {
-    $request->validate([
-        'user_name' => 'required|unique:users',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|min:8',
-        'role' => 'required|in:admin,publisher,student'
+    // تسجيل مستخدم جديد
+public function register(Request $request)
+{
+    // التحقق من صحة البيانات المدخلة
+    $validated = $request->validate([
+        'name'     => 'required|string|max:255',
+        'email'    => 'required|string|email|unique:users',
+        'password' => 'required|string|min:6|confirmed',
+        'role'     => 'in:admin,user' // اختياري
     ]);
 
+    // إنشاء المستخدم
     $user = User::create([
-        'user_name' => $request->user_name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => $request->role
+        'name'     => $validated['name'],
+        'email'    => $validated['email'],
+        'password' => Hash::make($validated['password']),
+        'role'     => $validated['role'] ?? 'user',
     ]);
 
+    // توليد توكن باستخدام Laravel Sanctum
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    // إرجاع الرد بصيغة JSON
     return response()->json([
-        'message' => 'User registered successfully',
-        'user' => $user
+        'message' => 'تم تسجيل المستخدم بنجاح.',
+        'token'   => $token,
+        'user'    => [
+            'id'    => $user->id,
+            'name'  => $user->name,
+            'email' => $user->email,
+            'role'  => $user->role,
+        ]
     ], 201);
 }
 
-public function login(Request $request) {
+    // تسجيل الدخول
+
+
+
+public function login(Request $request)
+{
+    // التحقق من صحة البيانات المدخلة
     $request->validate([
-        'email' => 'required|email',
-        'password' => 'required'
+        'email'    => 'required|email',
+        'password' => 'required|string',
     ]);
 
-    if (!Auth::attempt($request->only('email', 'password'))) {
-        return response()->json(['message' => 'Invalid credentials'], 401);
+    // جلب المستخدم من قاعدة البيانات
+    $user = User::where('email', $request->email)->first();
+
+    // التحقق من وجود المستخدم وكلمة المرور
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json(['message' => 'بيانات الدخول غير صحيحة.'], 401);
     }
 
-    $user = $request->user();
-    $token = $user->createToken('authToken')->plainTextToken;
+    // توليد توكن باستخدام Laravel Sanctum
+    $token = $user->createToken('auth_token')->plainTextToken;
 
+    // إرجاع الرد بصيغة JSON
     return response()->json([
-        'token' => $token,
-        'user' => [
-            'id' => $user->id,
-            'name' => $user->user_name,
+        'message' => 'تم تسجيل الدخول بنجاح.',
+        'token'   => $token,
+        'user'    => [
+            'id'    => $user->id,
+            'name'  => $user->name,
             'email' => $user->email,
-            'role' => $user->role
+            'role'  => $user->role,
         ]
     ]);
 }
 
-    public function user(Request $request)
+    // تسجيل الخروج
+    public function logout(Request $request)
     {
-        return response()->json($request->user());
-    }
+        $request->user()->currentAccessToken()->delete();
 
-
-  public function logout(Request $request)
-{
-    try {
-       
-        $request->user()->tokens()->delete();
-        
-        return response()->json([
-            'message' => 'تم تسجيل الخروج بنجاح',
-            'success' => true
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'فشل تسجيل الخروج',
-            'error' => $e->getMessage()
-        ], 500);
+        return response()->json(['message' => 'Logged out successfully.']);
     }
-}
 }

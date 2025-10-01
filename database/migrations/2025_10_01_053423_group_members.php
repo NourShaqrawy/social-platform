@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('group_members', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('group_id')->constrained()->onDelete('cascade');
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->enum('role', ['member', 'admin', 'moderator'])->default('member');
+    $table->timestamps();
+});
 
-        Schema::create('departments', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->foreignId('college_id')->constrained('colleges');
-            $table->timestamps();
-        });
     }
 
     /**
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        //
     }
 };

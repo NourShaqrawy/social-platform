@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('verifications', function (Blueprint $table) {
+        Schema::create('conversations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('students');
-            $table->foreignId('verified_by')->constrained('users'); // الموظف المسؤول
-            $table->boolean('status')->default(false);
-            $table->timestamp('verified_at')->nullable();
+            $table->enum('type', ['private', 'group'])->default('private');
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('verifictions');
+        Schema::dropIfExists('conversations');
     }
 };

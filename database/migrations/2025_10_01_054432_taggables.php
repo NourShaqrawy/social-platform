@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->foreignId('department_id')->constrained('departments');
-            $table->timestamps();
-        });
+      Schema::create('taggables', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('tag_id')->constrained()->onDelete('cascade');
+    $table->morphs('taggable'); // taggable_id + taggable_type
+    $table->timestamps();
+});
+
     }
 
     /**
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('courses');
+        //
     }
 };
