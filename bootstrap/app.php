@@ -14,7 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
          $middleware->alias([
         'role' => \App\Http\Middleware\CheckRole::class,
+        
     ]);
+    $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

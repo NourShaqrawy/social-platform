@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('videos', function (Blueprint $table) {
+       Schema::create('videos', function (Blueprint $table) {
     $table->id();
     $table->foreignId('user_id')->constrained()->onDelete('cascade');
     $table->string('title');
-    $table->string('video_url');
+    $table->string('video_path'); // مسار الفيديو داخل التخزين
     $table->string('thumbnail')->nullable();
     $table->integer('duration')->nullable(); // بالثواني
     $table->text('description')->nullable();
     $table->timestamps();
 });
+
 
     }
 
