@@ -19,7 +19,7 @@ return new class extends Migration
     $table->string('thumbnail')->nullable();
     $table->integer('duration')->nullable(); // بالثواني
     $table->text('description')->nullable();
-    $table->timestamps();
+   $table->timestamps();
 });
 
 

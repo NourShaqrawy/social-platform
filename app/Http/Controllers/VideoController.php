@@ -2,73 +2,102 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-
+use App\Models\Video;
+use Cloudinary\Cloudinary;
 
 class VideoController extends Controller
 {
-    // ✅ عرض جميع الفيديوهات
     public function index()
-    {
-        return response()->json(Video::with('user')->latest()->get());
-    }
+{
+    $videos = Video::where('user_id', Auth::id())->latest()->get();
 
-    // ✅ رفع فيديو جديد
-    public function store(Request $request)
+    return response()->json([
+        'videos' => $videos,
+    ]);
+}
+
+public function show($id)
+{
+    $video = Video::where('user_id', Auth::id())->findOrFail($id);
+
+    return response()->json([
+        'video' => $video,
+    ]);
+}
+
+    /**
+     * رفع فيديو إلى Cloudinary باستخدام env('CLOUDINARY_URL') مباشرة
+     */
+    public function upload(Request $request)
     {
+        // ✅ التحقق من صحة المدخلات
         $request->validate([
             'title'       => 'required|string|max:255',
-            'video'       => 'required|file|mimetypes:video/mp4,video/avi,video/mpeg|max:102400',
+            'video'       => 'required|mimetypes:video/mp4,video/avi,video/mov|max:51200',
             'description' => 'nullable|string',
         ]);
 
-        $path = $request->file('video')->store('videos', 'public');
+        // ✅ تهيئة كائن Cloudinary باستخدام متغير البيئة مباشرة
+        $cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
 
+        // ✅ رفع الفيديو باستخدام uploadApi
+        $uploaded = $cloudinary->uploadApi()->upload(
+            $request->file('video')->getRealPath(),
+            [
+                'resource_type' => 'video',
+                'folder'        => 'user_videos',
+            ]
+        );
+
+        // ✅ استخراج الرابط الآمن
+        $videoUrl = $uploaded['secure_url'] ?? null;
+
+        // ✅ إنشاء سجل في قاعدة البيانات
         $video = Video::create([
-            'user_id'    => Auth::id(),
-            'title'      => $request->title,
-            'video_path' => $path,
+            'user_id'     => Auth::id(),
+            'title'       => $request->title,
+            'video_path'  => $videoUrl,
+            'thumbnail'   => null,
+            'duration'    => null,
             'description' => $request->description,
         ]);
 
+        // ✅ إرجاع استجابة JSON
         return response()->json([
-            'message' => 'تم رفع الفيديو بنجاح.',
+            'message' => '✅ تم رفع الفيديو بنجاح باستخدام Cloudinary API',
             'video'   => $video,
-            'url'     => asset('storage/' . $video->video_path)
         ]);
     }
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'title'       => 'sometimes|required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
 
-    // ✅ عرض فيديو واحد
-    public function show(Video $video)
-    {
-        return response()->json([
-            'video' => $video,
-            'url'   => asset('storage/' . $video->video_path)
-        ]);
-    }
+    $video = Video::where('user_id', Auth::id())->findOrFail($id);
 
-    // ✅ تعديل بيانات الفيديو
-    public function update(Request $request, Video $video)
-    {
-        $request->validate([
-            'title'       => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-        ]);
+    $video->update([
+        'title'       => $request->title ?? $video->title,
+        'description' => $request->description ?? $video->description,
+    ]);
 
-        $video->update($request->only(['title', 'description']));
+    return response()->json([
+        'message' => '✅ تم تحديث بيانات الفيديو بنجاح',
+        'video'   => $video,
+    ]);
+}
+public function destroy($id)
+{
+    $video = Video::where('user_id', Auth::id())->findOrFail($id);
 
-        return response()->json(['message' => 'تم تعديل الفيديو.', 'video' => $video]);
-    }
+    $video->delete();
 
-    // ✅ حذف الفيديو من التخزين والقاعدة
-    public function destroy(Video $video)
-    {
-        Storage::disk('public')->delete($video->video_path);
-        $video->delete();
+    return response()->json([
+        'message' => '🗑️ تم حذف الفيديو بنجاح',
+    ]);
+}
 
-        return response()->json(['message' => 'تم حذف الفيديو.']);
-    }
 }
