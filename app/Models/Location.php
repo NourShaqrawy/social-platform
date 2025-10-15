@@ -11,8 +11,17 @@ class Location extends Model
 
     protected $fillable = ['city', 'country', 'latitude', 'longitude'];
 
-    public function posts() { return $this->hasMany(Post::class); }
-    public function users() { return $this->hasMany(User::class); }
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function groupPosts()
+    {
+        return $this->hasMany(GroupPost::class);
+    }
 }
-
-

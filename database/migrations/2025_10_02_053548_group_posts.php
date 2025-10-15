@@ -15,6 +15,10 @@ return new class extends Migration
     $table->id();
     $table->foreignId('group_id')->constrained()->onDelete('cascade');
     $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('location_id')->nullable()->constrained('locations')->nullOnDelete();
+    $table->foreignId('feeling_id')->nullable()->constrained('feelings')->nullOnDelete();
+
+
     $table->text('content');
     $table->string('media_url')->nullable();
     $table->timestamps();

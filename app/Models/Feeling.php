@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,13 @@ class Feeling extends Model
 
     protected $fillable = ['name', 'emoji', 'description'];
 
-    public function posts() { return $this->hasMany(Post::class); }
-}
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 
+    public function groupPosts()
+    {
+        return $this->hasMany(GroupPost::class);
+    }
+}

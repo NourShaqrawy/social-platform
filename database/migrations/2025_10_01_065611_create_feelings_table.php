@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('feelings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');         // مثل: سعيد، غاضب، متحمس
+            $table->string('name')->nullable();         // مثل: سعيد، غاضب، متحمس
             $table->string('emoji')->nullable(); // 😊 😡 😍
             $table->text('description')->nullable();
             $table->timestamps();

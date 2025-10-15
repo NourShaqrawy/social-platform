@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,10 +11,39 @@ class GroupPost extends Model
 
     protected $fillable = ['group_id', 'user_id', 'content', 'media_url'];
 
-    public function group()      { return $this->belongsTo(Group::class); }
-    public function user()       { return $this->belongsTo(User::class); }
-    public function comments()   { return $this->morphMany(Comment::class, 'commentable'); }
-    public function likes()      { return $this->morphMany(Like::class, 'likeable'); }
-    public function bookmarks()  { return $this->morphMany(Bookmark::class, 'bookmarkable'); }
-    public function tags()       { return $this->morphToMany(Tag::class, 'taggable'); }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+    public function feeling()
+    {
+        return $this->belongsTo(Feeling::class);
+    }
+
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+    public function bookmarks()
+    {
+        return $this->morphMany(Bookmark::class, 'bookmarkable');
+    }
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
 }

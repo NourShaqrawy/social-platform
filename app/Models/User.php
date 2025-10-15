@@ -43,10 +43,10 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-   protected $casts = [
-    'email_verified_at' => 'datetime',
-    'password' => 'hashed',
-];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
 
 
@@ -54,6 +54,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+    public function images()
+{
+    return $this->hasMany(Image::class);
+}
+
     public function videos()
     {
         return $this->hasMany(Video::class);
