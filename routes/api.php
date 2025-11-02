@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\VideoRoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -83,4 +84,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // 🗑️ حذف منشور والوسائط من Cloudinary
     Route::delete('/posts/cloud/{id}', [PostController::class, 'destroy_from_cloud']);
+});
+
+// routes/api.php
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/video-room', [VideoRoomController::class, 'create']);
+    Route::get('/video-room', [VideoRoomController::class, 'getRoom']);
 });

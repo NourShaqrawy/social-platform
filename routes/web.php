@@ -21,3 +21,7 @@ Route::get('/test-upload', function () {
     return 'تم رفع الفيديو: ';
 });
 
+// routes/web.php
+Route::get('/video-call/{room}', function ($room) {
+    return view('video-call', ['room' => $room]);
+});
