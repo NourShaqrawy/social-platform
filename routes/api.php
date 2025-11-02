@@ -87,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // routes/api.php
-Route::middleware('auth:sanctum')->group(function () {
+
     Route::post('/video-room', [VideoRoomController::class, 'create']);
     Route::get('/video-room', [VideoRoomController::class, 'getRoom']);
-});
+
