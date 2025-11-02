@@ -14,11 +14,12 @@ trait StoresLocation
      */
     public function storeLocation(array $data): Location
     {
-        return Location::create([
+        return Location::firstOrCreate([
             'city'      => $data['city'] ?? null,
             'country'   => $data['country'] ?? null,
             'latitude'  => $data['latitude'] ?? null,
             'longitude' => $data['longitude'] ?? null,
         ]);
     }
+    
 }

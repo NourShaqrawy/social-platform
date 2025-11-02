@@ -9,7 +9,14 @@ class GroupPost extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['group_id', 'user_id', 'content', 'media_url'];
+    protected $fillable = [
+        'group_id',
+        'user_id',
+        'content',
+        'media_url',
+        'feeling_id',
+        'location_id',
+    ];
 
 
     public function group()

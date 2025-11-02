@@ -83,6 +83,9 @@ class AuthController extends Controller
     // تسجيل الخروج
     public function logout(Request $request)
     {
+
+        /** @disregard delete false positive */
+
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out successfully.']);

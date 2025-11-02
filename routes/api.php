@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,17 +46,41 @@ Route::middleware('auth:sanctum')->group(function () {
     // 🧹 حذف صورة من Cloudinary وقاعدة البيانات
     Route::delete('/images/{id}/destroy-from-cloud', [ImageController::class, 'destroy_from_cloud']);
 });
+
 use App\Http\Controllers\GroupPostController;
 
 Route::middleware('auth:sanctum')->group(function () {
     // 📥 رفع منشور جديد داخل مجموعة
     Route::get('/group-posts', [GroupPostController::class, 'index']);
     Route::get('/group-posts/{id}', [GroupPostController::class, 'show']);
-    
+
     Route::post('/group-posts', [GroupPostController::class, 'store']);
     Route::put('/group-posts/{id}', [GroupPostController::class, 'update']);
-    
+
     Route::delete('/group-posts/{id}', [GroupPostController::class, 'destroy']);
     Route::delete('/group-posts/cloud/{id}', [GroupPostController::class, 'destroy_from_cloud']);
 });
-    //powerd by nour
+
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    // 📃 عرض كل منشورات المستخدم
+    Route::get('/posts', [PostController::class, 'index']);
+
+    // 🔍 عرض منشور واحد
+    Route::get('/posts/{id}', [PostController::class, 'show']);
+
+    // 📥 إنشاء منشور جديد
+    Route::post('/posts', [PostController::class, 'store']);
+
+    // ✏️ تعديل منشور
+    Route::put('/posts/{id}', [PostController::class, 'update']);
+
+    // 🗑️ حذف منشور فقط
+    Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+
+    // 🗑️ حذف منشور والوسائط من Cloudinary
+    Route::delete('/posts/cloud/{id}', [PostController::class, 'destroy_from_cloud']);
+});
