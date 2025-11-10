@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\LoginSuccessMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 
 class AuthController extends Controller
@@ -63,6 +65,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'بيانات الدخول غير صحيحة.'], 401);
         }
+         Mail::to($user->email)->send(new LoginSuccessMail($user));
 
         // توليد توكن باستخدام Laravel Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;

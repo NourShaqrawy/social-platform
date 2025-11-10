@@ -91,3 +91,31 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/video-room', [VideoRoomController::class, 'create']);
     Route::get('/video-room', [VideoRoomController::class, 'getRoom']);
 
+    
+
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LoginSuccessMail;
+
+// Route::post('/login', function (Request $request) {
+//     $credentials = $request->only('email', 'password');
+
+//     if (Auth::attempt($credentials)) {
+//         $user = Auth::user();
+
+//         // إرسال البريد الإلكتروني
+//         Mail::to($user->email)->send(new LoginSuccessMail($user));
+
+//         // توليد التوكن إذا كنت تستخدم Sanctum
+//         $token = $user->createToken('API Token')->plainTextToken;
+
+//         return response()->json([
+//             'message' => 'تم تسجيل الدخول بنجاح',
+//             'user' => $user,
+//             'token' => $token,
+//         ]);
+//     }
+
+//     return response()->json(['message' => 'بيانات الدخول غير صحيحة'], 401);
+// });
