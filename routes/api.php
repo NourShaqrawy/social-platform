@@ -6,6 +6,8 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VideoRoomController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\LikeController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -60,6 +62,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::delete('/group-posts/{id}', [GroupPostController::class, 'destroy']);
     Route::delete('/group-posts/cloud/{id}', [GroupPostController::class, 'destroy_from_cloud']);
+
+
+    Route::post('/likes', [LikeController::class, 'store'])->middleware('auth');
+    Route::delete('/likes', [LikeController::class, 'destroy'])->middleware('auth');
 });
 
 
@@ -88,10 +94,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // routes/api.php
 
-    Route::post('/video-room', [VideoRoomController::class, 'create']);
-    Route::get('/video-room', [VideoRoomController::class, 'getRoom']);
+Route::post('/video-room', [VideoRoomController::class, 'create']);
+Route::get('/video-room', [VideoRoomController::class, 'getRoom']);
 
-    
+
 
 
 use Illuminate\Support\Facades\Auth;

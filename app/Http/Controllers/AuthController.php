@@ -65,7 +65,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'بيانات الدخول غير صحيحة.'], 401);
         }
-         Mail::to($user->email)->send(new LoginSuccessMail($user));
+       //  Mail::to($user->email)->send(new LoginSuccessMail($user));
 
         // توليد توكن باستخدام Laravel Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;
