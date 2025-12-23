@@ -12,6 +12,6 @@ php artisan view:clear
 # احذر من migrate:fresh لأنه يحذف الجداول ويعيد إنشائها، استخدمه فقط إذا تريد إعادة قاعدة البيانات كاملة
 php artisan migrate:fresh --force
 php artisan storage:link
-
+php artisan db:seed
 # تشغيل Apache في المقدمة
 exec apache2-foreground
