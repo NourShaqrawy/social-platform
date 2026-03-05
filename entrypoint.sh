@@ -8,10 +8,10 @@ chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 php artisan cache:clear
 php artisan config:clear
 php artisan view:clear
-php artisan migrate
-php artisan db:seed
+# php artisan mi:f --seed
+# php artisan db:seed
 # احذر من migrate:fresh لأنه يحذف الجداول ويعيد إنشائها، استخدمه فقط إذا تريد إعادة قاعدة البيانات كاملة
-# php artisan migrate:fresh --seed
+php artisan migrate:fresh --seed
 php artisan storage:link
 
 # تشغيل Apache في المقدمة
