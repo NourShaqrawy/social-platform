@@ -46,7 +46,7 @@ RUN chown -R www-data:www-data /var/www/html \
 # تغيير مسار الـ DocumentRoot
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# إعداد سكربت البداية
+# إعداد سكرب ت البداية
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
