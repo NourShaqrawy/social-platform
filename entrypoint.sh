@@ -1,3 +1,4 @@
+هل ملف entrypoint يحتاج تعديلات ؟
 #!/bin/bash
 
 # تأكيد الصلاحيات داخل الحاوية أثناء التشغيل
@@ -8,11 +9,14 @@ chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 php artisan cache:clear
 php artisan config:clear
 php artisan view:clear
-# php artisan mi:f --seed
-# php artisan db:seed
+
+
+php artisan migrate:fresh --force
+
+php artisan migrate
 # احذر من migrate:fresh لأنه يحذف الجداول ويعيد إنشائها، استخدمه فقط إذا تريد إعادة قاعدة البيانات كاملة
-php artisan migrate:fresh --seed
-php artisan storage:link
+
+php artisan db:seed
 
 # تشغيل Apache في المقدمة
 exec apache2-foreground
