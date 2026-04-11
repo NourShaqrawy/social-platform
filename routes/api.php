@@ -5,6 +5,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VideoRoomController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\LikeController;
 
@@ -90,6 +91,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // 🗑️ حذف منشور والوسائط من Cloudinary
     Route::delete('/posts/cloud/{id}', [PostController::class, 'destroy_from_cloud']);
+
+    // 💬 تعليقات
+    Route::get('/comments', [CommentController::class, 'index']);
+    Route::get('/comments/{id}', [CommentController::class, 'show']);
+    Route::post('/comments', [CommentController::class, 'store']);
+    Route::put('/comments/{id}', [CommentController::class, 'update']);
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
 });
 
 // routes/api.php
